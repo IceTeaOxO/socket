@@ -1,21 +1,23 @@
-
-# 引入需要使用的函式庫
 import socket
 import threading
 
-
-#創建socket實例，設定L3 L4 protocol(IP/TCP)
+# 創建socket實例，設定L3 L4 protocol(IP/TCP)
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+pars = ('127.0.0.1', 8888)
 
-    
-pars = ('127.0.0.1', 8888) # you can change the server port to whatever you want
-
-print("[*] Listening as " + str(pars))
 
 # 設定伺服器IP以及接口，讓server run 在 post=8888 IP=127.0.0.1上
 s.bind(pars)
 # 設定連接上限
 s.listen(5)
+
+def resM(code):
+    resH = "HTTP/1.1 "+code+" \r\n"+"Content-Length: 230\r\n"+"Content-Type: text/html; charset=UTF-8\r\n"+"\r\n"
+    
+    data = "<html><head><link href=”style.css” rel=”stylesheet” type=”text/css”></head><body>good</body></html>"
+    resM = resH+data
+    return resM
+
 
 
 # 當有客戶端連接時，執行下列方法
@@ -29,8 +31,10 @@ def serveClient(clientsocket, address):
         
         # 如果有收到資料，則回送
         print(data)
-        # if data:
-        #     clientsocket.send(b'response')
+
+        if data:
+            
+            clientsocket.send(b'response')
         
         # 如果客戶端送出結束訊息，則關閉連線，跳出迴圈
         if data == b'close':
