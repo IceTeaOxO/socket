@@ -38,8 +38,10 @@ def serveClient(clientsocket, address):
 # 使用(src IP, dst IP, src port, dst port)分辨不同使用者
 while True:
     # accept a new client and get it's information
+    
     (clientsocket, address) = s.accept()
     
     # 當有新客戶端連上，則為他多開一個線程，開啟線程後執行target
     
     threading.Thread(target = serveClient, args = (clientsocket, address)).start()
+
