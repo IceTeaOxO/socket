@@ -11,11 +11,13 @@ s.bind(pars)
 # 設定連接上限
 s.listen(5)
 
+html = "<html><head><link href=”style.css” rel=”stylesheet” type=”text/css”></head><body>good</body></html>"
+css = "Body {color: red;}"
+
 def resM(code):
-    resH = "HTTP/1.1 "+code+" \r\n"+"Content-Length: 230\r\n"+"Content-Type: text/html; charset=UTF-8\r\n"+"\r\n"
+    resH = "HTTP/1.1 "+code+" \r\n"+"Content-Type: text/html; charset=UTF-8\r\n"+"\r\n"
     
-    data = "<html><head><link href=”style.css” rel=”stylesheet” type=”text/css”></head><body>good</body></html>"
-    resM = resH+data
+    
     return resM
 
 
