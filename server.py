@@ -14,11 +14,13 @@ s.listen(5)
 html = "<html><head><link href=”style.css” rel=”stylesheet” type=”text/css”></head><body>good</body></html>"
 css = "Body {color: red;}"
 
-def resM(code):
-    resH = "HTTP/1.1 "+code+" \r\n"+"Content-Type: text/html; charset=UTF-8\r\n"+"\r\n"
+# 伺服器傳送給客戶端的資料
+def resM(code,obj):
+    resH = "HTTP/1.1 "+str(code)+" \r\n"+"Content-Type: text/html; charset=UTF-8\r\n"+"\r\n"
+    resH += str(obj)
+
     
-    
-    return resM
+    return resH
 
 
 
@@ -29,15 +31,39 @@ def serveClient(clientsocket, address):
     while True:
         # 設定一次可接收資料的大小
         data = clientsocket.recv(1024)
-        print("from client", data)
+        #print("from client", data)
         
         # 如果有收到資料，則回送
-        print(data)
-
         if data:
+            cData = data.decode("utf-8").split(' ')
+            print((cData))
+            # print(cData[0])
+            # print(cData[1])
+            method = cData[0]
+            url = cData[1]
+
+            if url=="/":
+                res = resM(200,'html')
+                print(res)
+                clientsocket.send(bytes(res,"UTF-8"))
+
+            if url=="/good.html":
+                res = resM(200,'html')
+                print(res)
+                clientsocket.send(bytes(res,"UTF-8"))
             
-            clientsocket.send(b'response')
-        
+            if url=="/style.css":
+                res = resM(200,'css')
+                print(res)
+                clientsocket.send(bytes(res,"UTF-8"))
+
+            if url=="/notfound":
+                res = resM(404,'notfound')
+                print(res)
+                clientsocket.send(bytes(res,"UTF-8"))
+            #clientsocket.send(b'response')
+            clientsocket.close()
+            break
         # 如果客戶端送出結束訊息，則關閉連線，跳出迴圈
         if data == b'close':
             clientsocket.close()
@@ -51,8 +77,8 @@ while True:
     # accept a new client and get it's information
     
     (clientsocket, address) = s.accept()
-    print(clientsocket)
-    print(address)
+    # print(clientsocket)
+    # print(address)
     
     
     # 當有新客戶端連上，則為他多開一個線程，開啟線程後執行target

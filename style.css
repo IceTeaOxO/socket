@@ -1,1 +1,11 @@
 Body {color: red;}
+
+HTTP/1.1 200 OK
+ Content-Type: text/html;
+
+<html><head><link href="style.css" rel="stylesheet" type = "text/css"></head><body>good</body></html>
+
+HTTP/1.1 200 
+Content-Type: text/css; charset=UTF-8
+
+html

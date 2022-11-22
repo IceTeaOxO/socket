@@ -42,10 +42,12 @@ def serveClient(clientsocket, address):
             newData = data.decode("utf-8").split(' ')
             method = newData[0]
             url = newData[1]
+            
             # check what user want to get, and create the respective response message to client
             # by resM function, and turn it to byte-like data and send to client
             if url == '/good.html':
                 resp = respM(200,'html')
+                print(resp)
                 clientsocket.send(bytes(resp,'UTF-8'))
             elif url == '/style.css':
                 resp = respM(200,'css')
