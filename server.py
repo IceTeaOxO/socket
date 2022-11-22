@@ -11,15 +11,26 @@ s.bind(pars)
 # 設定連接上限
 s.listen(5)
 
-html = "<html><head><link href=”style.css” rel=”stylesheet” type=”text/css”></head><body>good</body></html>"
-css = "Body {color: red;}"
+#html = "<html><head><link href=”style.css” rel=”stylesheet” type=”text/css”></head><body>good</body></html>"
+html = '<html><head><link href="style.css" rel="stylesheet" type = "text/css"></head><body>good</body></html>'
+css = 'Body {color: red;}'
 
 # 伺服器傳送給客戶端的資料
 def resM(code,obj):
-    resH = "HTTP/1.1 "+str(code)+" \r\n"+"Content-Type: text/html; charset=UTF-8\r\n"+"\r\n"
-    resH += str(obj)
-
+    resH=""
+    if str(code)=="200":
+        resH += "HTTP/1.1 "+"200 OK"+" \r\n"
+    elif str(code)=="301":
+        resH += "HTTP/1.1 "+"301 Moved Permanently\r\nLocation: http://127.0.0.1:8888/good.html"+"\r\n\r\n"
+    elif str(code)=="404":
+        resH = "HTTP/1.1 "+"404 NotFound"+" \r\n"
+    resH += "Content-Type: text/html; charset=UTF-8\r\n"
+    resH += "\r\n"
     
+    if obj:    
+        resH += str(obj)
+
+    print(resH)
     return resH
 
 
@@ -37,29 +48,37 @@ def serveClient(clientsocket, address):
         if data:
             cData = data.decode("utf-8").split(' ')
             print((cData))
-            # print(cData[0])
-            # print(cData[1])
             method = cData[0]
             url = cData[1]
 
             if url=="/":
-                res = resM(200,'html')
-                print(res)
+                res = resM(200,html)
+                print(200)
                 clientsocket.send(bytes(res,"UTF-8"))
 
             if url=="/good.html":
-                res = resM(200,'html')
-                print(res)
+                
+                res = resM(200,html)
+                print(200)
+                #print(res)
                 clientsocket.send(bytes(res,"UTF-8"))
             
             if url=="/style.css":
-                res = resM(200,'css')
-                print(res)
+                res = resM(200,css)
+                print(css)
+                clientsocket.send(bytes(res,"UTF-8"))
+            if url=="/redirect.html":
+                res = resM(301,"redirect")
+                print(301)
+                #print(res)
                 clientsocket.send(bytes(res,"UTF-8"))
 
+                clientsocket.close()
+                break
             if url=="/notfound":
                 res = resM(404,'notfound')
-                print(res)
+                print(404)
+                #print(res)
                 clientsocket.send(bytes(res,"UTF-8"))
             #clientsocket.send(b'response')
             clientsocket.close()

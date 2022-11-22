@@ -12,13 +12,16 @@ def respM(number,obj):
     if number == 200:
         message += ' OK\n '
         if obj == 'html':
+            print("USE HTML")
             message += 'Content-Type: text/html;\r\n\r\n' + html
         if obj == 'css':
+            print("USE CSS")
             message += 'Context-Type: text/css;\r\n\r\n' + css
     elif number == 301:
         message += ' Moved Permanently\r\nLocation: http://127.0.0.1:8888/good.html\r\n\r\n'
     elif number == 404:
         message += ' Not Found\r\n\r\n'
+    print("Finally:",message)
     return message
 
 # create socket and set port
@@ -47,7 +50,7 @@ def serveClient(clientsocket, address):
             # by resM function, and turn it to byte-like data and send to client
             if url == '/good.html':
                 resp = respM(200,'html')
-                print(resp)
+                print("HTML:",resp)
                 clientsocket.send(bytes(resp,'UTF-8'))
             elif url == '/style.css':
                 resp = respM(200,'css')
